@@ -1,6 +1,6 @@
 package camera
 
-import "gitlab.jiangxingai.com/applications/edgex/device-service/camera/internal/utils"
+import "gitlab.jiangxingai.com/applications/edgex/device-service/camera/utils"
 
 type StreamConfig struct {
 	Enabled *bool  `json:"enabled,omitempty"`

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/logger"
-	"gitlab.jiangxingai.com/applications/edgex/device-service/camera/internal/utils/process"
+	"gitlab.jiangxingai.com/applications/edgex/device-service/camera/utils/process"
 )
 
 type camera struct {
