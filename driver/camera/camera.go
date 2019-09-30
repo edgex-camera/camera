@@ -117,7 +117,7 @@ func (c *camera) Configure(cc CameraConfig) {
 }
 
 func (c *camera) MergeConfigure(cc CameraConfig) bool {
-	MergeConfigure(&c.CameraConfig, &cc)
+	return MergeConfigure(&c.CameraConfig, &cc)
 }
 
 func (c *camera) GetConfigure() CameraConfig {
