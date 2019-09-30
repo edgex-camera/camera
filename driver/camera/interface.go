@@ -19,6 +19,7 @@ type Camera interface {
 	GetCapturePath() string
 	GetVideoPaths() []string
 	Configure(CameraConfig)
+	MergeConfigure(CameraConfig)
 	GetConfigure() CameraConfig
 }
 
