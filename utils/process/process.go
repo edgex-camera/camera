@@ -76,10 +76,13 @@ func (p *process) Start() {
 				continue
 			}
 
-			p.handleOutput(stdout, stderr)
+			err = p.handleOutputs(stdout, stderr)
+			if err != nil {
+				p.lc.Error(fmt.Sprintf("Failed to handle output: %v", err.Error()))
+			}
 			err = p.cmd.Wait()
 			if err != nil {
-				p.lc.Error(fmt.Sprintf("process %v stopped with error: %v", p.cmd.Args, err.Error()))
+				p.lc.Error(fmt.Sprintf("process %v stopped with error: %v", p.cmd.Args[0], err.Error()))
 			}
 
 			elapsed := time.Since(start)
@@ -90,7 +93,6 @@ func (p *process) Start() {
 			if p.stopByUser || p.restartPolicy == RestartPolicyNo {
 				break
 			}
-			p.lc.Info(fmt.Sprintf("process restarting: %v", p.cmd.Args))
 		}
 
 		p.lock.Lock()

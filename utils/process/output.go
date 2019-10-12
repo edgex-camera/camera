@@ -7,29 +7,39 @@ import (
 	"path/filepath"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/logger"
+	"gitlab.jiangxingai.com/applications/edgex/device-service/camera/utils"
 )
 
-func (p *process) handleOutput(stdout io.ReadCloser, stderr io.ReadCloser) error {
+func (p *process) handleOutputs(stdout io.ReadCloser, stderr io.ReadCloser) error {
 
-	stdoutFilename := p.stdoutFilename
-	if stdoutFilename == "" {
-		stdoutFilename = fmt.Sprintf("/tmp/%s-%d.stdout", filepath.Base(p.cmd.Path), p.cmd.Process.Pid)
+	if p.stdoutFilename == "" {
+		p.stdoutFilename = fmt.Sprintf("/data/logs/camera/%s.stdout", filepath.Base(p.cmd.Path))
 	}
 
-	stderrFilename := p.stderrFilename
-	if stderrFilename == "" {
-		stderrFilename = fmt.Sprintf("/tmp/%s-%d.stderr", filepath.Base(p.cmd.Path), p.cmd.Process.Pid)
+	if p.stderrFilename == "" {
+		p.stderrFilename = fmt.Sprintf("/data/logs/camera/%s.stderr", filepath.Base(p.cmd.Path))
 	}
 
-	p.lc.Info(fmt.Sprintf("stdout writing to %s", stdoutFilename))
-	p.lc.Info(fmt.Sprintf("stderr writing to %s", stderrFilename))
-	go pipeToFile(p.lc, stdout, stdoutFilename)
-	go pipeToFile(p.lc, stderr, stderrFilename)
+	handleOutput := func(pipe io.ReadCloser, filename string) error {
+		if err := utils.MakeDirsIfNotExist(filepath.Dir(filename)); err != nil {
+			return err
+		}
+		p.lc.Info(fmt.Sprintf("log writing to %s", filename))
+		go pipeToFile(p.lc, pipe, filename)
+		return nil
+	}
+
+	if err := handleOutput(stdout, p.stdoutFilename); err != nil {
+		return err
+	}
+	if err := handleOutput(stderr, p.stderrFilename); err != nil {
+		return err
+	}
 	return nil
 }
 
 func pipeToFile(lc logger.LoggingClient, pipe io.ReadCloser, filename string) {
-	file, err := os.OpenFile(filename, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0660)
+	file, err := os.OpenFile(filename, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0666)
 	if err != nil {
 		lc.Error(err.Error())
 		return
