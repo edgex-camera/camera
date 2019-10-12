@@ -18,11 +18,11 @@ type camera struct {
 	enabled         bool
 }
 
-func NewCamera(lc logger.LoggingClient, cmder CameraCmder) Camera {
+func NewCamera(lc logger.LoggingClient, cmder CameraCmder, cc CameraConfig) Camera {
 	return &camera{
 		lc:           lc,
 		cmder:        cmder,
-		CameraConfig: DefaultCameraConfig(),
+		CameraConfig: cc,
 		processes:    nil,
 		enabled:      false,
 	}
@@ -46,8 +46,8 @@ func (c *camera) Enable() {
 		}
 	}
 
-	if *c.CameraConfig.VideoConfig.Enabled {
-		videoMaintainer, err := newVideoMaintainer(c.lc, c.CameraConfig.VideoConfig.Path, *c.CameraConfig.VideoConfig.KeepRecord)
+	if c.CameraConfig.VideoConfig.Enabled {
+		videoMaintainer, err := newVideoMaintainer(c.lc, c.CameraConfig.VideoConfig.Path, c.CameraConfig.VideoConfig.KeepRecord)
 		if err != nil {
 			c.lc.Error(fmt.Sprintf("video maintainer init failed: %v", err.Error()))
 		}
@@ -80,13 +80,12 @@ func (c *camera) Disable(wait bool) {
 	}
 }
 
-func (c *camera) Refresh() {
-	c.Disable(true)
-	c.Enable()
+func (c *camera) IsEnabled() bool {
+	return c.enabled
 }
 
 func (c *camera) CapturePhotoJPG() (file *os.File, err error) {
-	if !*c.CameraConfig.CaptureConfig.Enabled {
+	if !c.CameraConfig.CaptureConfig.Enabled {
 		return nil, fmt.Errorf("video capture not enabled")
 	}
 
@@ -107,19 +106,4 @@ func (c *camera) GetCapturePath() string {
 
 func (c *camera) GetVideoPaths() []string {
 	return c.videoMaintainer.getFileList()
-}
-
-func (c *camera) Configure(cc CameraConfig) {
-	updated := MergeConfigure(&c.CameraConfig, &cc)
-	if updated {
-		c.Refresh()
-	}
-}
-
-func (c *camera) MergeConfigure(cc CameraConfig) bool {
-	return MergeConfigure(&c.CameraConfig, &cc)
-}
-
-func (c *camera) GetConfigure() CameraConfig {
-	return c.CameraConfig
 }
