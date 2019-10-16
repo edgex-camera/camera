@@ -41,7 +41,7 @@ var (
 		processor: "gst-launch-1.0",
 		// tested with nano
 		rtsp: cmdTemplate{
-			base:    "-e --gst-debug-level=3 rtspsrc location=%s ! rtph264depay ! h264parse ! tee name=t ",
+			base:    "-e --gst-debug-level=3 rtspsrc location=%[3]s ! rtph264depay ! h264parse ! tee name=t ",
 			capture: "t. ! queue ! avdec_h264 ! queue flush-on-eos=true ! jpegenc ! multifilesink post-messages=true location=%s max-files=1 ",
 			stream:  "t. ! queue ! flvmux streamable=true ! rtmpsink sync=false location=%s ",
 			video:   "t. ! queue ! splitmuxsink max-size-time=%d location=%s ",
