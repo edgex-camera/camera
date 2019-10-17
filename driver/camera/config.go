@@ -39,7 +39,6 @@ var defaultConf = CameraConfig{
 	Enabled:       true,
 	Height:        480,
 	Width:         640,
-	Frame:         25,
 	StreamConfig:  StreamConfig{Enabled: true},
 	CaptureConfig: CaptureConfig{Enabled: true},
 	VideoConfig: VideoConfig{
