@@ -14,6 +14,7 @@ type Camera interface {
 	CapturePhotoJPG() (*os.File, error)
 	GetCapturePath() string
 	GetVideoPaths() []string
+	GetStreamAddr() string
 
 	// use Json config
 	MergeConfig(configPatch []byte) error

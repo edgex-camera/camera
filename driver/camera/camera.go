@@ -107,3 +107,7 @@ func (c *camera) GetCapturePath() string {
 func (c *camera) GetVideoPaths() []string {
 	return c.videoMaintainer.getFileList()
 }
+
+func (c *camera) GetStreamAddr() []string {
+	return c.CameraConfig.StreamConfig.Address
+}
