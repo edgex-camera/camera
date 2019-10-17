@@ -27,6 +27,7 @@ type CameraConfig struct {
 	Enabled   bool   `json:"enabled"`
 	Height    int    `json:"height"`
 	Width     int    `json:"width"`
+	Frame     int    `json:"frame"`
 	InputAddr string `json:"-"`
 
 	StreamConfig  `json:"stream"`
