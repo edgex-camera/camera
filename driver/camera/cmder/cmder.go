@@ -69,7 +69,7 @@ func (c *cmder) GetCmdProducers(cc camera.CameraConfig) []func() *exec.Cmd {
 	if !outputCapture && !outputStream && !outputVideo {
 		return []func() *exec.Cmd{}
 	}
-	cmdStr := fmt.Sprintf(template.base, cc.Width, cc.Height, cc.InputAddr)
+	cmdStr := fmt.Sprintf(template.base, cc.Width, cc.Height, cc.Frame, cc.InputAddr)
 	if outputCapture {
 		cmdStr += fmt.Sprintf(template.capture, cc.CaptureConfig.Path)
 	}
