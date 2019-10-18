@@ -23,22 +23,26 @@ type VideoConfig struct {
 	KeepRecord int    `json:"keep"`
 }
 
-type CameraConfig struct {
-	Enabled   bool   `json:"enabled"`
-	Height    int    `json:"height"`
-	Width     int    `json:"width"`
-	Frame     int    `json:"frame"`
-	InputAddr string `json:"-"`
+// 画质选项
+type QualityConfig struct {
+	ImageHeight int `json:"-"`
+	ImageWidth  int `json:"-"`
+	VideoHeight int `json:"-"`
+	VideoWidth  int `json:"-"`
+	FrameRate   int `json:"-"`
+}
 
+type CameraConfig struct {
+	Enabled       bool   `json:"enabled"`
+	InputAddr     string `json:"-"`
 	StreamConfig  `json:"stream"`
 	CaptureConfig `json:"capture"`
 	VideoConfig   `json:"video"`
+	QualityConfig `json:"quality"`
 }
 
 var defaultConf = CameraConfig{
 	Enabled:       true,
-	Height:        480,
-	Width:         640,
 	StreamConfig:  StreamConfig{Enabled: true},
 	CaptureConfig: CaptureConfig{Enabled: true},
 	VideoConfig: VideoConfig{
