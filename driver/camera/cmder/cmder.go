@@ -53,11 +53,13 @@ func isFFmpegAvail() bool {
 
 func (c *cmder) GetCmdProducers(cc camera.CameraConfig) []func() *exec.Cmd {
 	var template cmdTemplate
+	isWebcam := false
 	switch {
 	case strings.HasPrefix(cc.InputAddr, "rtsp://"):
 		template = c.template.rtsp
 	case strings.HasPrefix(cc.InputAddr, "/"):
 		template = c.template.webcam
+		isWebcam = true
 	default:
 		log.Printf("input not supported: %s", cc.InputAddr)
 		return []func() *exec.Cmd{}
@@ -69,7 +71,10 @@ func (c *cmder) GetCmdProducers(cc camera.CameraConfig) []func() *exec.Cmd {
 	if !outputCapture && !outputStream && !outputVideo {
 		return []func() *exec.Cmd{}
 	}
-	cmdStr := fmt.Sprintf(template.base, cc.Width, cc.Height, cc.Frame, cc.InputAddr)
+	cmdStr := fmt.Sprintf(template.base, cc.InputAddr)
+	if isWebcam {
+		cmdStr += fmt.Sprintf(template.quality, cc.QualityConfig.ImageWidth, cc.QualityConfig.ImageHeight, cc.QualityConfig.FrameRate, cc.QualityConfig.VideoWidth, cc.QualityConfig.VideoHeight)
+	}
 	if outputCapture {
 		cmdStr += fmt.Sprintf(template.capture, cc.CaptureConfig.Path)
 	}

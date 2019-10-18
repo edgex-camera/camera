@@ -2,6 +2,7 @@ package cmder
 
 type cmdTemplate struct {
 	base    string
+	quality string
 	capture string
 	h264    string
 	stream  string
@@ -41,7 +42,7 @@ var (
 		processor: "gst-launch-1.0",
 		// tested with nano
 		rtsp: cmdTemplate{
-			base:    "-e --gst-debug-level=3 rtspsrc location=%[3]s ! rtph264depay ! h264parse ! tee name=t ",
+			base:    "-e --gst-debug-level=3 rtspsrc location=%s ! rtph264depay ! h264parse ! tee name=t ",
 			capture: "t. ! queue ! avdec_h264 ! queue flush-on-eos=true ! jpegenc ! multifilesink post-messages=true location=%s max-files=1 ",
 			stream:  "t. ! queue ! flvmux streamable=true ! rtmpsink sync=false location=%s ",
 			video:   "t. ! queue ! splitmuxsink max-size-time=%d location=%s ",
@@ -49,7 +50,8 @@ var (
 
 		// tested with jx core board
 		webcam: cmdTemplate{
-			base:    "-e --gst-debug-level=3 v4l2src device=%[4]s ! image/jpeg,width=%[1]d,height=%[2]d,framerate=%[3]d/1 ! jpegdec ! queue ! videoconvert ! tee name=t ",
+			base:    "-e --gst-debug-level=3 v4l2src device=%s ",
+			quality: "! image/jpeg,width=%[1]d,height=%[2]d,framerate=%[3]d/1 ! jpegdec ! queue ! videoconvert ! queue ! videoscale ! video/x-raw,width=%[4]d,height=%[5]d ! tee name=t ",
 			capture: "t. ! queue flush-on-eos=true ! mppjpegenc ! multifilesink location=%s max-files=1 post-messages=true ",
 			h264:    "t. ! queue ! mpph264enc vbr=false bitrate=\"800000\" filerate=false ! queue ! h264parse ! tee name=v ",
 			stream:  "v. ! queue ! flvmux streamable=true ! rtmpsink sync=false location=%s ",
