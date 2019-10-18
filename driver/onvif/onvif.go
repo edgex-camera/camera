@@ -17,17 +17,19 @@ type onvifDevice interface {
 }
 
 type onvifCamera struct {
-	device    onvifDevice
-	lc        logger.LoggingClient
-	address   string
-	stopTimer *time.Timer
+	device       onvifDevice
+	lc           logger.LoggingClient
+	address      string
+	stopTimer    *time.Timer
+	profileToken onvif.ReferenceToken
 }
 
 func NewOnvif(lc logger.LoggingClient, address string) (cam Onvif, err error) {
 	return &onvifCamera{
-		lc:      lc,
-		device:  nil,
-		address: address,
+		lc:           lc,
+		device:       nil,
+		address:      address,
+		profileToken: getToken(address),
 	}, nil
 }
 
@@ -71,7 +73,7 @@ func (c *onvifCamera) callMethod(method interface{}) error {
 func (c *onvifCamera) ContinuousMove(timeout time.Duration, moveSpeed Move) error {
 	c.lc.Info("camera move started")
 	req := PTZ.ContinuousMove{
-		ProfileToken: "Profile_000",
+		ProfileToken: c.profileToken,
 		Velocity: onvif.PTZSpeed{
 			PanTilt: onvif.Vector2D{
 				X:     moveSpeed.PanTiltSpeed.X,
@@ -103,7 +105,7 @@ func (c *onvifCamera) Stop() error {
 
 	c.lc.Info("camera move stopped")
 	req := PTZ.Stop{
-		ProfileToken: "Profile_000",
+		ProfileToken: c.profileToken,
 		PanTilt:      true,
 		Zoom:         true,
 	}
@@ -114,7 +116,7 @@ func (c *onvifCamera) Stop() error {
 func (c *onvifCamera) SetHomePosition() error {
 	c.lc.Info("camera move reset")
 	req := PTZ.SetPreset{
-		ProfileToken: "Profile_000",
+		ProfileToken: c.profileToken,
 		PresetToken:  "1",
 	}
 	return c.callMethod(req)
@@ -129,7 +131,7 @@ func (c *onvifCamera) Reset() error {
 	}
 
 	req := PTZ.GotoPreset{
-		ProfileToken: "Profile_000",
+		ProfileToken: c.profileToken,
 		PresetToken:  "1",
 	}
 	return c.callMethod(req)
