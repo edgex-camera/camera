@@ -9,26 +9,6 @@ import (
 	"github.com/yakovlevdmv/goonvif/xsd/onvif"
 )
 
-type Envelope struct {
-	XMLName xml.Name `xml:"http://www.w3.org/2003/05/soap-envelope Envelope"`
-	Body    Body
-}
-
-type Body struct {
-	XMLName             xml.Name `xml:"http://www.w3.org/2003/05/soap-envelope Body"`
-	GetProfilesResponse Response
-}
-
-type Response struct {
-	XMLName  xml.Name
-	Profiles Profiles
-}
-
-type Profiles struct {
-	XMLName xml.Name
-	Token   onvif.ReferenceToken `xml:"token,attr"`
-}
-
 func getToken(address string) onvif.ReferenceToken {
 	device, _ := goonvif.NewDevice(address)
 	device.Authenticate("admin", "admin")
@@ -36,7 +16,16 @@ func getToken(address string) onvif.ReferenceToken {
 	res, _ := device.CallMethod(req)
 	body, _ := ioutil.ReadAll(res.Body)
 
-	response := &Envelope{}
+	var response struct {
+		Body struct {
+			GetProfilesResponse struct {
+				Profiles []onvif.Profile
+			}
+		}
+	}
 	xml.Unmarshal(body, &response)
-	return response.Body.GetProfilesResponse.Profiles.Token
+
+	// 取第一个Profile使用
+	profile := response.Body.GetProfilesResponse.Profiles[0]
+	return profile.Token
 }
