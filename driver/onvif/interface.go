@@ -10,6 +10,9 @@ type Onvif interface {
 
 	SetHomePosition() error
 	Reset() error
+
+	GetPresets() string
+	SetPreset(number int64) error
 }
 
 type Vector2D struct {
