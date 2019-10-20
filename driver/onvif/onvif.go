@@ -1,6 +1,7 @@
 package onvif
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -25,6 +26,9 @@ type onvifCamera struct {
 }
 
 func NewOnvif(lc logger.LoggingClient, address string) (cam Onvif, err error) {
+	//if device.DriverConfigs()["presets"] == "" {
+	initPresetsConfig()
+	//}
 	return &onvifCamera{
 		lc:           lc,
 		device:       nil,
@@ -135,4 +139,18 @@ func (c *onvifCamera) Reset() error {
 		PresetToken:  "1",
 	}
 	return c.callMethod(req)
+}
+
+func (c *onvifCamera) GetPresets() string {
+	c.lc.Info("get presets info")
+	return getPresets()
+}
+
+func (c *onvifCamera) SetPreset(number int64) error {
+	c.lc.Info("set preset", number)
+	if number == int64(1) {
+		return errors.New("cannot set preset 1, it is home position")
+	}
+	setPreset(number)
+	return nil
 }
