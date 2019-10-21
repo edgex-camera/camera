@@ -152,5 +152,18 @@ func (c *onvifCamera) SetPreset(number int64) error {
 		return errors.New("cannot set preset 1, it is home position")
 	}
 	setPreset(number)
-	return nil
+	req := PTZ.SetPreset{
+		ProfileToken: c.profileToken,
+		PresetToken:  numberToToken(number),
+	}
+	return c.callMethod(req)
+}
+
+func (c *onvifCamera) GotoPreset(number int64) error {
+	c.lc.Info("camera move to preset", number)
+	req := PTZ.GotoPreset{
+		ProfileToken: c.profileToken,
+		PresetToken:  numberToToken(number),
+	}
+	return c.callMethod(req)
 }
