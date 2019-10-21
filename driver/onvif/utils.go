@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"io/ioutil"
+	"strconv"
 
 	"github.com/yakovlevdmv/goonvif"
 	"github.com/yakovlevdmv/goonvif/Media"
@@ -54,7 +55,12 @@ func setPreset(number int64) {
 	current := []byte(device.DriverConfigs()["presets"])
 	current_map := make(map[int64]bool)
 	json.Unmarshal(current, &current_map)
+
 	current_map[number] = true
 	new_presets, _ := json.Marshal(current_map)
 	jxstartup.PutDriverConfig("presets", new_presets)
+}
+
+func numberToToken(number int64) onvif.ReferenceToken {
+	return onvif.ReferenceToken(strconv.Itoa(int(number)))
 }
