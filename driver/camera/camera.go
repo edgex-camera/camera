@@ -36,7 +36,7 @@ func (c *camera) Enable() {
 	c.lc.Error("camera enabled")
 
 	usberr := EnsureUsbExists(c.CameraConfig.Address)
-	if err != nil {
+	if usberr != nil {
 		c.lc.Error(fmt.Sprintf("ensure usb signal error: %v", usberr))
 	}
 	c.enabled = true
