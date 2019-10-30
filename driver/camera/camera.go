@@ -34,6 +34,11 @@ func (c *camera) Enable() {
 		return
 	}
 	c.lc.Error("camera enabled")
+
+	usberr := EnsureUsbExists(c.CameraConfig.Address)
+	if err != nil {
+		c.lc.Error(fmt.Sprintf("ensure usb signal error: %v", usberr))
+	}
 	c.enabled = true
 
 	producers := c.cmder.GetCmdProducers(c.CameraConfig)
