@@ -73,13 +73,13 @@ func (c *cmder) GetCmdProducers(cc camera.CameraConfig) []func() *exec.Cmd {
 	}
 	cmdStr := fmt.Sprintf(template.base, cc.InputAddr)
 	if isWebcam {
-		cmdStr += fmt.Sprintf(template.quality, cc.QualityConfig.ImageWidth, cc.QualityConfig.ImageHeight, cc.QualityConfig.FrameRate, cc.QualityConfig.VideoWidth, cc.QualityConfig.VideoHeight)
+		cmdStr += fmt.Sprintf(template.quality, cc.QualityConfig.ImageWidth, cc.QualityConfig.ImageHeight, cc.QualityConfig.FrameRate)
 	}
 	if outputCapture {
 		cmdStr += fmt.Sprintf(template.capture, cc.CaptureConfig.Path)
 	}
 	if outputStream || outputVideo {
-		cmdStr += template.h264
+		cmdStr += fmt.Sprintf(template.h264, cc.QualityConfig.VideoWidth, cc.QualityConfig.VideoHeight)
 	}
 	if outputStream {
 		cmdStr += fmt.Sprintf(template.stream, cc.StreamConfig.Address)
