@@ -49,6 +49,7 @@ func SupportedFps(addr string, width int, height int) []int {
 func removeDuplicate(list []string) []string {
 	var res []string
 	for _, item := range list {
+		item = strings.TrimSuffix(item, "\n")
 		if len(res) == 0 {
 			res = append(res, item)
 		} else {
