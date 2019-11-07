@@ -53,12 +53,15 @@ func isFFmpegAvail() bool {
 
 func (c *cmder) GetCmdProducers(cc camera.CameraConfig) []func() *exec.Cmd {
 	var template cmdTemplate
+	var inputAddr string
 	isWebcam := false
 	switch {
 	case strings.HasPrefix(cc.InputAddr, "rtsp://"):
 		template = c.template.rtsp
+		inputAddr = buildInputAddr(cc.InputAddr, cc.Auth)
 	case strings.HasPrefix(cc.InputAddr, "/"):
 		template = c.template.webcam
+		inputAddr = cc.InputAddr
 		isWebcam = true
 	default:
 		log.Printf("input not supported: %s", cc.InputAddr)
@@ -71,7 +74,7 @@ func (c *cmder) GetCmdProducers(cc camera.CameraConfig) []func() *exec.Cmd {
 	if !outputCapture && !outputStream && !outputVideo {
 		return []func() *exec.Cmd{}
 	}
-	cmdStr := fmt.Sprintf(template.base, cc.InputAddr)
+	cmdStr := fmt.Sprintf(template.base, inputAddr)
 	if isWebcam {
 		cmdStr += fmt.Sprintf(template.quality, cc.QualityConfig.ImageWidth, cc.QualityConfig.ImageHeight, cc.QualityConfig.FrameRate)
 	}
@@ -93,4 +96,14 @@ func (c *cmder) GetCmdProducers(cc camera.CameraConfig) []func() *exec.Cmd {
 	cmdList := strings.Fields(cmdStr)
 	func1 := func() *exec.Cmd { return exec.Command(c.template.processor, cmdList...) }
 	return []func() *exec.Cmd{func1}
+}
+
+func buildInputAddr(inputAddr string, auth camera.Auth) string {
+	prefix := "rtsp://"
+	if auth.Username == "" {
+		return inputAddr
+	}
+	suffix := strings.TrimPrefix(inputAddr, prefix)
+	fullAddr := fmt.Sprintf("%s%s:%s@%s", prefix, auth.Username, auth.Password, suffix)
+	return fullAddr
 }
