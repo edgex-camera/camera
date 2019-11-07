@@ -25,16 +25,23 @@ type VideoConfig struct {
 
 // 画质选项
 type QualityConfig struct {
-	ImageHeight int `json:"-"`
-	ImageWidth  int `json:"-"`
-	VideoHeight int `json:"-"`
-	VideoWidth  int `json:"-"`
-	FrameRate   int `json:"-"`
+	ImageHeight int `json:"image_height"`
+	ImageWidth  int `json:"image_width"`
+	VideoHeight int `json:"video_height"`
+	VideoWidth  int `json:"video_width"`
+	FrameRate   int `json:"frame_rate"`
+}
+
+// 用户认证(主要用于rtsp摄像头)
+type Auth struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 type CameraConfig struct {
 	Enabled       bool   `json:"enabled"`
-	InputAddr     string `json:"-"`
+	InputAddr     string `json:"input_addr"`
+	Auth          `json:"auth"`
 	StreamConfig  `json:"stream"`
 	CaptureConfig `json:"capture"`
 	VideoConfig   `json:"video"`
