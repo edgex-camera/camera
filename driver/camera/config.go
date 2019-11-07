@@ -8,17 +8,17 @@ import (
 
 type StreamConfig struct {
 	Enabled bool   `json:"enabled"`
-	Address string `json:"-"`
+	Address string `json:"addr"`
 }
 
 type CaptureConfig struct {
 	Enabled bool   `json:"enabled"`
-	Path    string `json:"-"`
+	Path    string `json:"path"`
 }
 
 type VideoConfig struct {
 	Enabled    bool   `json:"enabled"`
-	Path       string `json:"-"`
+	Path       string `json:"path"`
 	Length     int    `json:"length"`
 	KeepRecord int    `json:"keep"`
 }
