@@ -43,7 +43,7 @@ var (
 		// tested with nano
 		rtsp: cmdTemplate{
 			base:    "-e --gst-debug-level=3 rtspsrc location=%s ! rtph264depay ! h264parse ! tee name=t ",
-			capture: "t. ! queue ! avdec_h264 ! queue flush-on-eos=true ! jpegenc ! multifilesink post-messages=true location=%s max-files=1 ",
+			capture: "t. ! queue ! avdec_h264 ! queue flush-on-eos=true ! videorate ! video/x-raw,framerate=5/1 ! jpegenc ! multifilesink post-messages=true location=%s max-files=1 ",
 			stream:  "t. ! queue ! flvmux streamable=true ! rtmpsink sync=false location=%s ",
 			video:   "t. ! queue ! splitmuxsink max-size-time=%d location=%s ",
 		},
@@ -52,7 +52,7 @@ var (
 		webcam: cmdTemplate{
 			base:    "-e --gst-debug-level=3 v4l2src device=%s ",
 			quality: "! image/jpeg,width=%[1]d,height=%[2]d,framerate=%[3]d/1 ! jpegdec ! tee name=t ",
-			capture: "t. ! queue flush-on-eos=true ! jpegenc ! multifilesink location=%s max-files=1 post-messages=true ",
+			capture: "t. ! queue flush-on-eos=true ! videorate ! video/x-raw,framerate=5/1 ! jpegenc ! multifilesink location=%s max-files=1 post-messages=true ",
 			h264:    "t. ! queue ! videoconvert ! queue ! videoscale ! video/x-raw,width=%[1]d,height=%[2]d ! queue ! mpph264enc vbr=false bitrate=\"800000\" filerate=false ! queue ! h264parse ! tee name=v ",
 			stream:  "v. ! queue ! flvmux streamable=true ! rtmpsink sync=false location=%s ",
 			video:   "v. ! queue ! splitmuxsink max-size-time=%d location=%s ",
