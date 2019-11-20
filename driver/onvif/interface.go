@@ -5,6 +5,8 @@ import (
 )
 
 type Onvif interface {
+	MergeConfig(configPatch []byte) error
+
 	ContinuousMove(time time.Duration, move Move) error
 	Stop() error
 
