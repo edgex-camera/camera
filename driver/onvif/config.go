@@ -7,9 +7,9 @@ import (
 )
 
 type OnvifConfig struct {
-	Address  string
-	Username string
-	Password string
+	Address  string `json:"address"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 func (c *onvifCamera) MergeConfig(configPatch []byte) error {
