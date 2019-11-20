@@ -14,6 +14,7 @@ type StreamConfig struct {
 type CaptureConfig struct {
 	Enabled bool   `json:"enabled"`
 	Path    string `json:"path"`
+	Rate    int    `json:"rate"`
 }
 
 type VideoConfig struct {

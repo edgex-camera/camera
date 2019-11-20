@@ -14,9 +14,9 @@ import (
 	"github.com/edgexfoundry/device-sdk-go/pkg/jxstartup"
 )
 
-func getToken(address string) onvif.ReferenceToken {
-	device, _ := goonvif.NewDevice(address)
-	device.Authenticate("admin", "admin")
+func getToken(config OnvifConfig) onvif.ReferenceToken {
+	device, _ := goonvif.NewDevice(config.Address)
+	device.Authenticate(config.Username, config.Password)
 	req := Media.GetProfiles{}
 	res, _ := device.CallMethod(req)
 	body, _ := ioutil.ReadAll(res.Body)
@@ -36,7 +36,7 @@ func getToken(address string) onvif.ReferenceToken {
 }
 
 // 新建预置点配置，1点占用，2-255未占用
-func initPresetsConfig() {
+func InitPresetsConfig() {
 	presets := make(map[int64]bool)
 	presets[1] = true
 	for i := 2; i < 256; i++ {
@@ -51,7 +51,7 @@ func getPresets() string {
 }
 
 func setPreset(number int64) {
-	initPresetsConfig()
+	InitPresetsConfig()
 	current := []byte(device.DriverConfigs()["presets"])
 	current_map := make(map[int64]bool)
 	json.Unmarshal(current, &current_map)

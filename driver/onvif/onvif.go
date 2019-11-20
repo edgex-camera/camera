@@ -20,20 +20,17 @@ type onvifDevice interface {
 type onvifCamera struct {
 	device       onvifDevice
 	lc           logger.LoggingClient
-	address      string
+	OnvifConfig  OnvifConfig
 	stopTimer    *time.Timer
 	profileToken onvif.ReferenceToken
 }
 
-func NewOnvif(lc logger.LoggingClient, address string) (cam Onvif, err error) {
-	//if device.DriverConfigs()["presets"] == "" {
-	initPresetsConfig()
-	//}
+func NewOnvif(lc logger.LoggingClient, config OnvifConfig) (cam Onvif, err error) {
 	return &onvifCamera{
 		lc:           lc,
 		device:       nil,
-		address:      address,
-		profileToken: getToken(address),
+		OnvifConfig:  config,
+		profileToken: getToken(config),
 	}, nil
 }
 
@@ -48,12 +45,12 @@ func (c *onvifCamera) connect() (err error) {
 	if c.device != nil { // already connected
 		return nil
 	}
-	device, err := goonvif.NewDevice(c.address)
+	device, err := goonvif.NewDevice(c.OnvifConfig.Address)
 	if err != nil {
 		c.lc.Error("onvif camera connect error: %v", err)
 		return err
 	}
-	device.Authenticate("admin", "admin")
+	device.Authenticate(c.OnvifConfig.Username, c.OnvifConfig.Password)
 	c.device = device
 	return nil
 }
