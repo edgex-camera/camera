@@ -2,7 +2,9 @@ package camera
 
 import (
 	"encoding/json"
+	"path/filepath"
 
+	"gitlab.jiangxingai.com/applications/edgex/device-service/camera/utils"
 	jsonpatch "gopkg.in/evanphx/json-patch.v4"
 )
 
@@ -80,6 +82,16 @@ func (c *camera) MergeConfig(configPatch []byte) error {
 		return err
 	}
 	err = json.Unmarshal(new, &c.CameraConfig)
+	if err != nil {
+		return err
+	}
+
+	err = utils.MakeDirsIfNotExist(filepath.Dir(c.CameraConfig.CaptureConfig.Path))
+	if err != nil {
+		return err
+	}
+
+	err = utils.MakeDirsIfNotExist(filepath.Dir(c.CameraConfig.VideoConfig.Path))
 	if err != nil {
 		return err
 	}
