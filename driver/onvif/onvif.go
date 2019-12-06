@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/logger"
@@ -22,6 +23,7 @@ type onvifCamera struct {
 	lc           logger.LoggingClient
 	OnvifConfig  OnvifConfig
 	stopTimer    *time.Timer
+	mutex        *sync.Mutex
 	profileToken onvif.ReferenceToken
 }
 
@@ -89,20 +91,17 @@ func (c *onvifCamera) ContinuousMove(timeout time.Duration, moveSpeed Move) erro
 		// timeout not working
 	}
 
-	if c.stopTimer != nil {
-		c.stopTimer.Stop()
-		c.stopTimer = nil
-	}
+	c.ensureNoStopTimer()
+
 	err := c.callMethod(req)
+	c.mutex.Lock()
 	c.stopTimer = time.AfterFunc(timeout, func() { _ = c.Stop() })
+	c.mutex.Unlock()
 	return err
 }
 
 func (c *onvifCamera) Stop() error {
-	if c.stopTimer != nil {
-		c.stopTimer.Stop()
-		c.stopTimer = nil
-	}
+	c.ensureNoStopTimer()
 
 	c.lc.Info("camera move stopped")
 	req := PTZ.Stop{
@@ -126,10 +125,8 @@ func (c *onvifCamera) SetHomePosition() error {
 func (c *onvifCamera) Reset() error {
 	c.lc.Info("camera move reset")
 
-	if c.stopTimer != nil {
-		c.stopTimer.Stop()
-		_ = c.Stop()
-	}
+	c.ensureNoStopTimer()
+	c.Stop()
 
 	req := PTZ.GotoPreset{
 		ProfileToken: c.profileToken,
@@ -158,9 +155,20 @@ func (c *onvifCamera) SetPreset(number int64) error {
 
 func (c *onvifCamera) GotoPreset(number int64) error {
 	c.lc.Info("camera move to preset", number)
+	c.ensureNoStopTimer()
 	req := PTZ.GotoPreset{
 		ProfileToken: c.profileToken,
 		PresetToken:  numberToToken(number),
 	}
 	return c.callMethod(req)
+}
+
+// helpers
+func (c *onvifCamera) ensureNoStopTimer() {
+	c.mutex.Lock()
+	if c.stopTimer != nil {
+		c.stopTimer.Stop()
+		c.stopTimer = nil
+	}
+	c.mutex.Unlock()
 }
