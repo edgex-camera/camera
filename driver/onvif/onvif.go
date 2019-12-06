@@ -32,6 +32,7 @@ func NewOnvif(lc logger.LoggingClient, config OnvifConfig) (cam Onvif, err error
 		lc:           lc,
 		device:       nil,
 		OnvifConfig:  config,
+		mutex:        &sync.Mutex{},
 		profileToken: getToken(config),
 	}, nil
 }
