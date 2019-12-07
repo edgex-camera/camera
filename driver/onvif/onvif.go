@@ -96,7 +96,9 @@ func (c *onvifCamera) ContinuousMove(timeout time.Duration, moveSpeed Move) erro
 
 	err := c.callMethod(req)
 	c.mutex.Lock()
-	c.stopTimer = time.AfterFunc(timeout, func() { _ = c.Stop() })
+	if c.stopTimer == nil {
+		c.stopTimer = time.AfterFunc(timeout, func() { _ = c.Stop() })
+	}
 	c.mutex.Unlock()
 	return err
 }
