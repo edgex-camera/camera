@@ -9,6 +9,7 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/logger"
 	"github.com/yakovlevdmv/goonvif"
+	"github.com/yakovlevdmv/goonvif/Device"
 	"github.com/yakovlevdmv/goonvif/PTZ"
 	"github.com/yakovlevdmv/goonvif/xsd"
 	"github.com/yakovlevdmv/goonvif/xsd/onvif"
@@ -162,6 +163,29 @@ func (c *onvifCamera) GotoPreset(number int64) error {
 	req := PTZ.GotoPreset{
 		ProfileToken: c.profileToken,
 		PresetToken:  numberToToken(number),
+	}
+	return c.callMethod(req)
+}
+
+func (c *onvifCamera) SyncTime() error {
+	c.lc.Info("time sync")
+	now := time.Now().UTC()
+	req := Device.SetSystemDateAndTime{
+		TimeZone: onvif.TimeZone{
+			TZ: "CST-8",
+		},
+		UTCDateTime: onvif.DateTime{
+			Time: onvif.Time{
+				Hour:   xsd.Int(now.Hour()),
+				Minute: xsd.Int(now.Minute()),
+				Second: xsd.Int(now.Second()),
+			},
+			Date: onvif.Date{
+				Year:  xsd.Int(now.Year()),
+				Month: xsd.Int(now.Month()),
+				Day:   xsd.Int(now.Day()),
+			},
+		},
 	}
 	return c.callMethod(req)
 }
