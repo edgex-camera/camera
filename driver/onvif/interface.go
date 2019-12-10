@@ -16,6 +16,8 @@ type Onvif interface {
 	GetPresets() string
 	SetPreset(number int64) error
 	GotoPreset(number int64) error
+
+	SyncTime() error
 }
 
 type Vector2D struct {
