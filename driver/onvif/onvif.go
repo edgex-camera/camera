@@ -34,11 +34,14 @@ func NewOnvif(lc logger.LoggingClient, config OnvifConfig) (cam Onvif, err error
 		device:       nil,
 		OnvifConfig:  config,
 		mutex:        &sync.Mutex{},
-		profileToken: getToken(config),
+		profileToken: "",
 	}, nil
 }
 
 func (c *onvifCamera) connect() (err error) {
+	if c.profileToken == "" {
+		c.profileToken = getToken(c.OnvifConfig)
+	}
 	defer func() {
 		if r := recover(); r != nil {
 			c.lc.Error(fmt.Sprint("Init Onvif camera failed, Recovered in ", r))
