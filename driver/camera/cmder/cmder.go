@@ -52,6 +52,8 @@ func isFFmpegAvail() bool {
 }
 
 func (c *cmder) GetCmdProducers(cc camera.CameraConfig) []func() *exec.Cmd {
+	isGst := c.template.processor == "gst-launch-1.0"
+
 	var template cmdTemplate
 	var inputAddr string
 	isWebcam := false
@@ -78,7 +80,7 @@ func (c *cmder) GetCmdProducers(cc camera.CameraConfig) []func() *exec.Cmd {
 	if isWebcam {
 		cmdStr += fmt.Sprintf(template.quality, cc.QualityConfig.ImageWidth, cc.QualityConfig.ImageHeight, cc.QualityConfig.FrameRate)
 	}
-	if outputCapture {
+	if outputCapture && isGst {
 		cmdStr += fmt.Sprintf(template.capture, cc.CaptureConfig.Rate, cc.CaptureConfig.Path)
 	}
 	if outputStream || outputVideo {
@@ -91,6 +93,9 @@ func (c *cmder) GetCmdProducers(cc camera.CameraConfig) []func() *exec.Cmd {
 	}
 	if outputVideo {
 		cmdStr += fmt.Sprintf(template.video, cc.VideoConfig.Length*c.videoLengthMultiplier, cc.VideoConfig.Path)
+	}
+	if outputCapture && !isGst {
+		cmdStr += fmt.Sprintf(template.capture, cc.CaptureConfig.Rate, cc.CaptureConfig.Path)
 	}
 
 	cmdList := strings.Fields(cmdStr)
