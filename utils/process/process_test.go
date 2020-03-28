@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"gitlab.jiangxingai.com/applications/edgex/edgex-utils/logger"
+	"github.com/edgex-camera/edgex-utils/logger"
 )
 
 var lc = logger.NewPrintClient()

@@ -10,8 +10,8 @@ import (
 	"github.com/yakovlevdmv/goonvif/Media"
 	"github.com/yakovlevdmv/goonvif/xsd/onvif"
 
-	"github.com/edgexfoundry/device-sdk-go"
-	"github.com/edgexfoundry/device-sdk-go/pkg/jxstartup"
+	"github.com/edgex-camera/device-sdk-go"
+	"github.com/edgex-camera/device-sdk-go/pkg/camstartup"
 )
 
 func getToken(config OnvifConfig) onvif.ReferenceToken {
@@ -43,7 +43,7 @@ func InitPresetsConfig() {
 		presets[int64(i)] = false
 	}
 	config, _ := json.Marshal(presets)
-	jxstartup.PutDriverConfig("presets", config)
+	camstartup.PutDriverConfig("presets", config)
 }
 
 func getPresets() string {
@@ -58,7 +58,7 @@ func setPreset(number int64) {
 
 	current_map[number] = true
 	new_presets, _ := json.Marshal(current_map)
-	jxstartup.PutDriverConfig("presets", new_presets)
+	camstartup.PutDriverConfig("presets", new_presets)
 }
 
 func numberToToken(number int64) onvif.ReferenceToken {

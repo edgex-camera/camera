@@ -16,3 +16,8 @@ func EnsureUsbExists(usb string) error {
 
 	return ioutil.WriteFile(valuePath, []byte("1"), 0644)
 }
+
+func CheckDevicePath(path string) error {
+	_, err := os.Stat(path)
+	return err
+}
