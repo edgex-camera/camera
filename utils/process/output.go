@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/edgex-camera/camera/utils"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/logger"
-	"gitlab.jiangxingai.com/applications/edgex/device-service/camera/utils"
 )
 
 func (p *process) handleOutputs(stdout io.ReadCloser, stderr io.ReadCloser) error {

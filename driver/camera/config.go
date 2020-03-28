@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"path/filepath"
 
-	"gitlab.jiangxingai.com/applications/edgex/device-service/camera/utils"
+	"github.com/edgex-camera/camera/utils"
 	jsonpatch "gopkg.in/evanphx/json-patch.v4"
 )
 

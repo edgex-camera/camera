@@ -20,7 +20,7 @@ var (
 		processor: "ffmpeg",
 		rtsp: cmdTemplate{
 			base:    "-rtsp_transport tcp -i %s ",
-			capture: "-r %d/1 -strftime 1 %s ",
+			capture: "-r %d/1 -strftime 1 -y %s ",
 			stream:  "-vcodec copy -an -f flv %s ",
 			video: `-flags +global_header 
 		-f stream_segment -segment_time %d -segment_format_options 
@@ -29,7 +29,7 @@ var (
 		},
 		webcam: cmdTemplate{
 			base:    "-use_wallclock_as_timestamps 1 -f v4l2 -vcodec mjpeg -s %[1]dx%[2]d -i %[3]s ",
-			capture: "-r %d/1 -strftime 1 %s ",
+			capture: "-r %d/1 -strftime 1 -y %s ",
 			stream:  "-vcodec h264 -an -f flv %s ",
 			video: `-flags +global_header 
 			-f stream_segment -segment_time %d -segment_format_options 

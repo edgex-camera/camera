@@ -4,7 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"gitlab.jiangxingai.com/applications/edgex/edgex-utils/logger"
+	"github.com/edgex-camera/device-sdk-go/driver/onvif"
+
+	"github.com/edgex-camera/edgex-utils/logger"
 )
 
 var lc = logger.NewPrintClient()
@@ -13,7 +15,7 @@ var address = "10.54.128.132:8899"
 // var rtspAddr = "rtsp://10.54.128.132:554/mpeg4"
 
 func setup() (Onvif, error) {
-	onvif, err := NewOnvif(lc, address)
+	onvif, err := onvif.NewOnvif(lc, address)
 	return onvif, err
 }
 
@@ -23,7 +25,7 @@ func TestContinuousMove(t *testing.T) {
 		t.Error(err)
 	}
 
-	err = camera.ContinuousMove(1000*time.Millisecond, Move{Vector2D{X: 1, Y: 1}, 0})
+	err = camera.ContinuousMove(1000*time.Millisecond, onvif.Move{Vector2D{X: 1, Y: 1}, 0})
 	if err != nil {
 		t.Error(err)
 	}
