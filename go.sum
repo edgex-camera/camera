@@ -14,8 +14,6 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/edgex-camera/device-sdk-go v1.0.1-0.20200329120140-a908c998ccc9 h1:+udPxLMzyohzseOqODsVZ0aS/NaRT2q8d1CLcbJ2IaM=
 github.com/edgex-camera/device-sdk-go v1.0.1-0.20200329120140-a908c998ccc9/go.mod h1:EG2iz1VKMGO/BQNbnl0UGkWMFD7A71pRwgFa4TrkGuc=
-github.com/edgex-camera/edgex-utils v0.0.0-20200328191541-b71e1e0b64ec h1:QXT54pn5J/jXsXogd+vZJV3tQ5eREYp+IvqfjMIO/JI=
-github.com/edgex-camera/edgex-utils v0.0.0-20200328191541-b71e1e0b64ec/go.mod h1:7xxviCQQgXYfLByP07q/lrgUGJJ8Ov9PedRUSo6kpjA=
 github.com/edgexfoundry/go-mod-core-contracts v0.1.14 h1:rwQK/tIQyhNrzYmJMU23kNqxUC9iRaBheRwfwavpkng=
 github.com/edgexfoundry/go-mod-core-contracts v0.1.14/go.mod h1:wUlH4D1HdWNExL6Tel9enMmiWMpVnfPnyVttZ9Ap32M=
 github.com/edgexfoundry/go-mod-core-contracts v0.1.36/go.mod h1:1bdaXB48tEwWFJGecFC/Oszy53xcGW6RA6Sw5T9v+9g=
