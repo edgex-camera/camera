@@ -5,8 +5,6 @@ go 1.13
 require (
 	github.com/beevik/etree v1.1.0 // indirect
 	github.com/edgex-camera/device-sdk-go v1.0.1-0.20200329120140-a908c998ccc9
-
-	github.com/edgex-camera/edgex-utils v0.0.0-20200328191541-b71e1e0b64ec
 	github.com/edgexfoundry/go-mod-core-contracts v0.1.52
 	github.com/elgs/gostrgen v0.0.0-20161222160715-9d61ae07eeae // indirect
 	github.com/fsnotify/fsnotify v1.4.9
