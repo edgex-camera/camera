@@ -6,12 +6,11 @@ import (
 	"io/ioutil"
 	"strconv"
 
+	"github.com/edgex-camera/device-sdk-go"
+	"github.com/edgex-camera/device-sdk-go/pkg/camstartup"
 	"github.com/yakovlevdmv/goonvif"
 	"github.com/yakovlevdmv/goonvif/Media"
 	"github.com/yakovlevdmv/goonvif/xsd/onvif"
-
-	"github.com/edgex-camera/device-sdk-go"
-	"github.com/edgex-camera/device-sdk-go/pkg/camstartup"
 )
 
 func getToken(config OnvifConfig) onvif.ReferenceToken {
